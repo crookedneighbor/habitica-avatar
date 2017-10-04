@@ -14,7 +14,9 @@ describe('addImg', function () {
   })
 
   it('returns a function', function () {
-    var func = addImg(this.characterSpritesNode, this.user)
+    var func = addImg(this.characterSpritesNode, {
+      user: this.user
+    })
 
     expect(func).to.be.an('function')
   })

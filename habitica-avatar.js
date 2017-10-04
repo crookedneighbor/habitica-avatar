@@ -30,7 +30,7 @@ function habiticaAvatar (options) {
   characterSprites.style.width = '90px'
   characterSprites.style.height = '90px'
 
-  CHARACTER_SPRITE_NODES.forEach(addImg(characterSprites, user))
+  CHARACTER_SPRITE_NODES.forEach(addImg(characterSprites, options))
 
   avatarContainer.appendChild(characterSprites)
 

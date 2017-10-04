@@ -31,7 +31,7 @@ function habiticaAvatar (options) {
   characterSprites.style.width = '90px'
   characterSprites.style.height = '90px'
 
-  CHARACTER_SPRITE_NODES.forEach(addImg(characterSprites, user))
+  CHARACTER_SPRITE_NODES.forEach(addImg(characterSprites, options))
 
   avatarContainer.appendChild(characterSprites)
 
@@ -47,7 +47,8 @@ var findS3Src = require('./find-s3-src')
 var formatEquipmentImg = require('./format-equipment-img')
 var formatAppearanceImg = require('./format-appearance-img')
 
-module.exports = function addImg (characterSpritesNode, user) {
+module.exports = function addImg (characterSpritesNode, options) {
+  var user = options.user;
   var appearance = user.preferences
   var gear = user.items.gear
 
