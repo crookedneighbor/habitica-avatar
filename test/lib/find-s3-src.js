@@ -1,4 +1,5 @@
 'use strict'
+/* eslint-disable no-unused-expressions */
 
 var findS3Src = require('../../lib/find-s3-src')
 
@@ -20,4 +21,3 @@ describe('findS3Src', function () {
     })
   })
 })
-

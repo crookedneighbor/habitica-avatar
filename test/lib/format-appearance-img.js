@@ -1,4 +1,5 @@
 'use strict'
+/* eslint-disable no-unused-expressions */
 
 var formatAppearance = require('../../lib/format-appearance-img')
 

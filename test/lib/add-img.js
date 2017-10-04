@@ -1,4 +1,5 @@
 'use strict'
+/* eslint-disable no-unused-expressions */
 
 var addImg = require('../../lib/add-img')
 
@@ -59,4 +60,3 @@ describe('addImg', function () {
     expect(characterSpritesWithoutMount.appendChild).to.not.be.called
   })
 })
-

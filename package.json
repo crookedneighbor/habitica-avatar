@@ -33,7 +33,12 @@
       "it",
       "describe",
       "expect",
-      "sandbox" 
+      "makeFakeDomElement",
+      "sandbox",
+      "xit"
+    ],
+    "ignore": [
+      "dist/"
     ]
   }
 }

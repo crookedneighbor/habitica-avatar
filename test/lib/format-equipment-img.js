@@ -1,4 +1,5 @@
 'use strict'
+/* eslint-disable no-unused-expressions */
 
 var formatEquipment = require('../../lib/format-equipment-img')
 

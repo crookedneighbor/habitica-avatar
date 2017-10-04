@@ -1,4 +1,5 @@
 'use strict'
+/* eslint-disable no-unused-expressions */
 
 var habiticaAvatar = require('../habitica-avatar')
 
@@ -45,22 +46,22 @@ describe('Habitica Avatar', function () {
           base: 1,
           color: 'black'
         },
-        size: 'broad',
+        size: 'broad'
       }
-    };
+    }
   })
 
   it('returns a dom node', function () {
     var node
     var fakeDomContainer = makeFakeDomElement()
 
-    global.document.createElement.onFirstCall().returns(fakeDomContainer);
+    global.document.createElement.onFirstCall().returns(fakeDomContainer)
 
     node = habiticaAvatar({
       user: this.user
     })
 
-    expect(node).to.equal(fakeDomContainer);
+    expect(node).to.equal(fakeDomContainer)
   })
 
   it('applies extra padding if user has no mount', function () {
@@ -73,7 +74,7 @@ describe('Habitica Avatar', function () {
     })
 
     expect(node.style.paddingTop).to.equal('24.5px')
-  });
+  })
 
   it('applies extra padding if user has mount but ignore: mount is set', function () {
     var node
@@ -88,7 +89,7 @@ describe('Habitica Avatar', function () {
     })
 
     expect(node.style.paddingTop).to.equal('24.5px')
-  });
+  })
 
   it('does not apply extra padding if user has mount', function () {
     var node
@@ -100,7 +101,7 @@ describe('Habitica Avatar', function () {
     })
 
     expect(node.style.paddingTop).to.not.exist
-  });
+  })
 
   it('applies background if user has one', function () {
     var node
