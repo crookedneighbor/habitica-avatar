@@ -75,6 +75,21 @@ describe('Habitica Avatar', function () {
     expect(node.style.paddingTop).to.equal('24.5px')
   });
 
+  it('applies extra padding if user has mount but ignore: mount is set', function () {
+    var node
+
+    this.user.items.currentMount = 'Wolf-Base'
+
+    node = habiticaAvatar({
+      ignore: {
+        mount: true
+      },
+      user: this.user
+    })
+
+    expect(node.style.paddingTop).to.equal('24.5px')
+  });
+
   it('does not apply extra padding if user has mount', function () {
     var node
 
@@ -97,6 +112,21 @@ describe('Habitica Avatar', function () {
     })
 
     expect(node.style.backgroundImage).to.equal('url("https://s3.amazonaws.com/habitica-assets/mobileApp/images/background_fake-background.png")')
+  })
+
+  it('does not apply background if ignore:background is set', function () {
+    var node
+
+    this.user.preferences.background = 'fake-background'
+
+    node = habiticaAvatar({
+      ignore: {
+        background: true
+      },
+      user: this.user
+    })
+
+    expect(node.style.backgroundImage).to.not.exist
   })
 
   it('does not apply background if user does not have one', function () {

@@ -8,6 +8,7 @@ var CHARACTER_SPRITE_NODES = require('./lib/character-sprites-config')
 
 function habiticaAvatar (options) {
   var user = options.user
+  var ignore = options.ignore || {}
   var appearance = user.preferences
 
   var avatarContainer = document.createElement('div')
@@ -19,11 +20,11 @@ function habiticaAvatar (options) {
   avatarContainer.style.boxSizing = 'border-box'
   avatarContainer.style.imageRendering = 'pixelated'
 
-  if (!user.items.currentMount) {
+  if (!user.items.currentMount || ignore.mount) {
     avatarContainer.style.paddingTop = '24.5px'
   }
 
-  if (appearance.background) {
+  if (appearance.background && !ignore.background) {
     avatarContainer.style.backgroundImage = 'url("' + findS3Src('background_' + appearance.background) + '")'
   }
 
@@ -51,10 +52,15 @@ module.exports = function addImg (characterSpritesNode, options) {
   var user = options.user;
   var appearance = user.preferences
   var gear = user.items.gear
+  var ignore = options.ignore || {}
 
   return function (config) {
     var img = document.createElement('img')
     var s3Key
+
+    if (ignore[config.name]) {
+      return
+    }
 
     img.style.position = 'absolute'
 
