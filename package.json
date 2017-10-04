@@ -1,0 +1,39 @@
+{
+  "name": "habitica-avatar",
+  "version": "0.0.1",
+  "description": "A module for constructing the Habitica avatar.",
+  "main": "habitica-avatar.js",
+  "files": [
+    "habitica-avatar.js",
+    "lib/*.js"
+  ],
+  "scripts": {
+    "build": "browserify -s avatar habitica-avatar.js > dist/script.js",
+    "lint": "standard --verbose | snazzy",
+    "server": "http-server -p3003",
+    "test": "mocha test --recursive"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browserify": "^14.4.0",
+    "chai": "^4.1.2",
+    "http-server": "^0.10.0",
+    "mocha": "^4.0.0",
+    "sinon": "^4.0.1",
+    "sinon-chai": "^2.14.0",
+    "snazzy": "^7.0.0",
+    "standard": "^10.0.3"
+  },
+  "standard": {
+    "globals": [ 
+      "afterEach",
+      "beforeEach",
+      "it",
+      "describe",
+      "expect",
+      "sandbox" 
+    ]
+  }
+}
