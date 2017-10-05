@@ -37,6 +37,19 @@ describe('formatAppearance', function () {
     expect(name).to.not.exist
   })
 
+  it('returns nothing if hair subproperty is 0', function () {
+    var name = formatAppearance('hair', {
+      subName: 'flower',
+      appearance: {
+        hair: {
+          flower: '0'
+        }
+      }
+    })
+
+    expect(name).to.not.exist
+  })
+
   it('returns hair value with hair color', function () {
     var name = formatAppearance('hair', {
       subName: 'bangs',
@@ -63,5 +76,15 @@ describe('formatAppearance', function () {
     })
 
     expect(name).to.equal('1')
+  })
+
+  it('returns nothing if value is none', function () {
+    var name = formatAppearance('chair', {
+      appearance: {
+        chair: 'none'
+      }
+    })
+
+    expect(name).to.not.exist
   })
 })

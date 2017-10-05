@@ -10,6 +10,12 @@ describe('formatEquipment', function () {
     expect(name).to.equal('name')
   })
 
+  it('returns nothing if name includes "base_0"', function () {
+    var name = formatEquipment('warrior_base_0', {})
+
+    expect(name).to.not.exist
+  })
+
   it('assigns extra styles to image if item is weapon_special_critical', function () {
     var img = {
       style: {
