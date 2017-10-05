@@ -141,4 +141,56 @@ describe('Habitica Avatar', function () {
 
     expect(node.style.backgroundImage).to.not.exist
   })
+
+  it('inserts dom node into provided container', function () {
+    var fakeElement = makeFakeDomElement()
+    var node = habiticaAvatar({
+      container: fakeElement,
+      user: this.user
+    })
+
+    expect(fakeElement.appendChild).to.be.calledOnce
+    expect(fakeElement.appendChild).to.be.calledWith(node)
+  })
+
+  it('inserts dom node into dom node from selector', function () {
+    var fakeElement = makeFakeDomElement()
+    var node
+
+    document.querySelector.withArgs('#my-div').returns(fakeElement)
+
+    node = habiticaAvatar({
+      container: '#my-div',
+      user: this.user
+    })
+
+    expect(fakeElement.appendChild).to.be.calledOnce
+    expect(fakeElement.appendChild).to.be.calledWith(node)
+  })
+
+  it('inserts dom node into dom node from selector', function () {
+    var fakeElement = makeFakeDomElement()
+    var node
+
+    document.querySelector.withArgs('#my-div').returns(fakeElement)
+
+    node = habiticaAvatar({
+      container: '#my-div',
+      user: this.user
+    })
+
+    expect(fakeElement.appendChild).to.be.calledOnce
+    expect(fakeElement.appendChild).to.be.calledWith(node)
+  })
+
+  it('ignores container if no dom element is returned', function () {
+    document.querySelector.withArgs('#my-div').returns(null)
+
+    expect(() => {
+      habiticaAvatar({
+        container: '#my-div',
+        user: this.user
+      })
+    }).to.not.throw()
+  })
 })

@@ -75,6 +75,7 @@ var CHARACTER_SPRITE_NODES = require('./lib/character-sprites-config')
 
 function habiticaAvatar (options) {
   var user = options.user
+  var container = options.container
   var ignore = options.ignore || {}
   var appearance = user.preferences
 
@@ -102,6 +103,14 @@ function habiticaAvatar (options) {
   CHARACTER_SPRITE_NODES.forEach(addImg(characterSprites, options))
 
   avatarContainer.appendChild(characterSprites)
+
+  if (typeof container === 'string') {
+    container = document.querySelector(container)
+  }
+
+  if (container) {
+    container.appendChild(avatarContainer)
+  }
 
   return avatarContainer
 }
