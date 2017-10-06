@@ -47,7 +47,7 @@ function makeAvatar() {
       preferences: {
         costume: false,
         background: getValue('background'),
-        sleep: false,
+        sleep: getValue('sleep') === 'true',
         chair: getValue('chair'),
         shirt: getValue('shirt'),
         skin: getValue('skin'),
@@ -70,6 +70,7 @@ function makeAvatar() {
 function randomizeSelects () {
   var selects = [
     'background',
+    'sleep',
     'chair',
     'base',
     'beard',
@@ -260,6 +261,7 @@ module.exports = function addImg (characterSpritesNode, options) {
       }
     } else if (config.type === 'appearance') {
       s3Key = formatAppearanceImg(config.name, {
+        ignore: ignore,
         subName: config.subName,
         appearance: appearance
       })
@@ -374,10 +376,9 @@ module.exports = [{
 }, {
   name: 'weapon',
   type: 'equipment'
-// TODO
-// }, {
-//   name: 'zzz',
-//   type: 'appearance'
+}, {
+  name: 'sleep',
+  type: 'appearance'
 }, {
   name: 'mount',
   type: 'pet',
@@ -431,6 +432,7 @@ module.exports = function (name, config) {
   var s3Key
   var subName = config.subName
   var appearance = config.appearance
+  var ignore = config.ignore || {}
 
   if (name === 'hair') {
     if (!appearance.hair[subName] || appearance.hair[subName] === '0') {
@@ -443,8 +445,16 @@ module.exports = function (name, config) {
       s3Key = s3Key + '_' + appearance.hair.color
     }
   } else if (name === 'skin') {
-    // TODO account for sleeping eyes when sleep: true
     s3Key = appearance.skin
+
+    if (appearance.sleep && !ignore.sleep) {
+      s3Key = s3Key + '_sleep'
+    }
+  } else if (name === 'sleep') {
+    if (!appearance.sleep) {
+      return // skip if user is not asleep
+    }
+    s3Key = 'zzz'
   } else {
     s3Key = appearance[name]
   }

@@ -14,14 +14,47 @@ describe('formatAppearance', function () {
     expect(name).to.equal('bar')
   })
 
-  xit('accounts for sleeping in inn when rendering skin', function () {
+  it('accounts for sleeping in inn when rendering skin', function () {
     var name = formatAppearance('skin', {
       appearance: {
+        sleep: true,
         skin: 'bar'
       }
     })
 
-    expect(name).to.equal('not-bar')
+    expect(name).to.equal('bar_sleep')
+  })
+
+  it('does not change skin if ignore sleep is used', function () {
+    var name = formatAppearance('skin', {
+      ignore: {sleep: true},
+      appearance: {
+        sleep: true,
+        skin: 'bar'
+      }
+    })
+
+    expect(name).to.equal('bar')
+  })
+
+  it('uses zzz key for sleep node', function () {
+    var name = formatAppearance('sleep', {
+      appearance: {
+        sleep: true
+      }
+    })
+
+    expect(name).to.equal('zzz')
+  })
+
+  it('skips sleep node if not asleep', function () {
+    var name = formatAppearance('sleep', {
+      appearance: {
+        sleep: false
+      }
+    })
+
+    expect(name).to.not.exist
   })
 
   it('returns nothing if hair subproperty does not exist', function () {

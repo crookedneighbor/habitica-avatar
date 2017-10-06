@@ -46,7 +46,7 @@ function makeAvatar() {
       preferences: {
         costume: false,
         background: getValue('background'),
-        sleep: false,
+        sleep: getValue('sleep') === 'true',
         chair: getValue('chair'),
         shirt: getValue('shirt'),
         skin: getValue('skin'),
@@ -69,6 +69,7 @@ function makeAvatar() {
 function randomizeSelects () {
   var selects = [
     'background',
+    'sleep',
     'chair',
     'base',
     'beard',

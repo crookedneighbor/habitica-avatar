@@ -97,6 +97,7 @@ habiticaAvatar({
     head: true,
     headAccessory: true,
     shield: true, // offhand equipment
+    sleep: true,
     weapon: true,
     pet: true
   }
@@ -115,8 +116,6 @@ A demo app is available at https://crookedneighbor.github.io/habitica-avatar/
 
 ## TODO
 
-- [ ] Add sleep support
-- [ ] Add ability to ignore sleep
 - [ ] Add visual buff support
 - [ ] Add ability to ignore visual buff
 - [ ] Add ability to force costume
