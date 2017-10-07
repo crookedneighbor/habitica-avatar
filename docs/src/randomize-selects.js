@@ -24,10 +24,10 @@ var selects = [
   'eyewear'
 ]
 
-function randomizeSelect(name) {
+function randomizeSelect (name) {
   var select = document.querySelector('#' + name)
   var options = select.querySelectorAll('option')
-  var random = Math.floor(Math.random() * options.length);
+  var random = Math.floor(Math.random() * options.length)
 
   if (!options[random]) {
     return

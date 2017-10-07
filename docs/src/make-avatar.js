@@ -1,13 +1,10 @@
 'use strict'
 
 var habiticaAvatar = require('../../habitica-avatar')
+var getValue = require('./get-value')
 var avatarContainer = document.querySelector('#avatar-container')
 
-function getValue(name) {
-  return document.querySelector('#' + name).value
-}
-
-module.exports = function makeAvatar() {
+module.exports = function makeAvatar () {
   var avatar
 
   avatarContainer.innerHTML = ''
@@ -20,7 +17,7 @@ module.exports = function makeAvatar() {
           snowball: getValue('visual-buff') === 'snowball',
           spookySparkles: getValue('visual-buff') === 'spookySparkles',
           shinySeed: getValue('visual-buff').split('.')[0] === 'shinySeed',
-          seafoam: getValue('visual-buff') === 'seafoam',
+          seafoam: getValue('visual-buff') === 'seafoam'
         },
         class: getValue('visual-buff').split('.')[1] || 'wizard'
       },
@@ -65,10 +62,10 @@ module.exports = function makeAvatar() {
           base: getValue('base'),
           color: getValue('color')
         },
-        size: getValue('size'),
+        size: getValue('size')
       }
     }
-  });
+  })
 
   avatar.id = 'avatar'
 }

@@ -40,7 +40,8 @@
       "xit"
     ],
     "ignore": [
-      "dist/"
+      "dist/",
+      "docs/script.js"
     ]
   }
 }

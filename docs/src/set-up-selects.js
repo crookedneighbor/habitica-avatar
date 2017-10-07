@@ -1,6 +1,6 @@
 'use strict'
 
-function populateSelect(name, object) {
+function populateSelect (name, object) {
   var select = document.querySelector('#' + name)
 
   Object.keys(object).forEach(function (key) {
@@ -31,7 +31,6 @@ module.exports = function (content) {
 
   populateSelect('pet', content.petInfo)
   populateSelect('mount', content.mountInfo)
-
 
   equipmentByGroup = Object.keys(content.gear.flat).reduce(function (equipment, key) {
     var gear = content.gear.flat[key]
