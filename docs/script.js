@@ -2,16 +2,52 @@
 'use strict'
 
 var Habitica = require('habitica')
-var habiticaAvatar = require('../habitica-avatar')
 
-var api = new Habitica()
+module.exports = new Habitica()
+
+},{"habitica":15}],2:[function(require,module,exports){
+'use strict'
+
+var api = require('./api')
+
+module.exports = function () {
+  return api.get('/content').then(function (response) {
+    return response.data
+  })
+}
+
+},{"./api":1}],3:[function(require,module,exports){
+'use strict'
+
+var getContent = require('./get-content')
+var randomizeSelects = require('./randomize-selects')
+var setUpSelects = require('./set-up-selects')
+var makeAvatar = require('./make-avatar')
+
+getContent().then(setUpSelects).then(function () {
+  document
+    .querySelector('#make-avatar')
+    .addEventListener('click', makeAvatar)
+  document
+    .querySelector('#randomize')
+    .addEventListener('click', randomizeSelects)
+
+  randomizeSelects()
+
+  makeAvatar()
+})
+
+},{"./get-content":2,"./make-avatar":4,"./randomize-selects":5,"./set-up-selects":6}],4:[function(require,module,exports){
+'use strict'
+
+var habiticaAvatar = require('../../habitica-avatar')
 var avatarContainer = document.querySelector('#avatar-container')
 
 function getValue(name) {
   return document.querySelector('#' + name).value
 }
 
-function makeAvatar() {
+module.exports = function makeAvatar() {
   var avatar
 
   avatarContainer.innerHTML = ''
@@ -77,33 +113,32 @@ function makeAvatar() {
   avatar.id = 'avatar'
 }
 
-function randomizeSelects () {
-  var selects = [
-    'background',
-    'sleep',
-    'chair',
-    'base',
-    'beard',
-    'mustache',
-    'color',
-    'flower',
-    'size',
-    'shirt',
-    'skin',
-    'pet',
-    'mount',
-    'weapon',
-    'shield',
-    'armor',
-    'head',
-    'headAccessory',
-    'back',
-    'body',
-    'eyewear'
-  ]
+},{"../../habitica-avatar":7}],5:[function(require,module,exports){
+'use strict'
 
-  selects.forEach(randomizeSelect)
-}
+var selects = [
+  'background',
+  'sleep',
+  'chair',
+  'base',
+  'beard',
+  'mustache',
+  'color',
+  'flower',
+  'size',
+  'shirt',
+  'skin',
+  'pet',
+  'mount',
+  'weapon',
+  'shield',
+  'armor',
+  'head',
+  'headAccessory',
+  'back',
+  'body',
+  'eyewear'
+]
 
 function randomizeSelect(name) {
   var select = document.querySelector('#' + name)
@@ -115,6 +150,13 @@ function randomizeSelect(name) {
   }
   options[random].setAttribute('selected', true)
 }
+
+module.exports = function randomizeSelects () {
+  selects.forEach(randomizeSelect)
+}
+
+},{}],6:[function(require,module,exports){
+'use strict'
 
 function populateSelect(name, object) {
   var select = document.querySelector('#' + name)
@@ -130,8 +172,7 @@ function populateSelect(name, object) {
   })
 }
 
-api.get('/content').then((response) => {
-  var content = response.data
+module.exports = function (content) {
   var appearances = content.appearances
   var equipmentByGroup
 
@@ -166,16 +207,9 @@ api.get('/content').then((response) => {
   Object.keys(equipmentByGroup).forEach(function (type) {
     populateSelect(type, equipmentByGroup[type])
   })
+}
 
-  document.querySelector('#make-avatar').addEventListener('click', makeAvatar)
-  document.querySelector('#randomize').addEventListener('click', randomizeSelects)
-
-  randomizeSelects()
-
-  makeAvatar()
-})
-
-},{"../habitica-avatar":2,"habitica":10}],2:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict'
 
 var findS3Src = require('./lib/find-s3-src')
@@ -227,7 +261,7 @@ function habiticaAvatar (options) {
 
 module.exports = habiticaAvatar
 
-},{"./lib/add-img":3,"./lib/character-sprites-config":4,"./lib/find-s3-src":5}],3:[function(require,module,exports){
+},{"./lib/add-img":8,"./lib/character-sprites-config":9,"./lib/find-s3-src":10}],8:[function(require,module,exports){
 'use strict'
 
 var findS3Src = require('./find-s3-src')
@@ -299,7 +333,7 @@ module.exports = function addImg (characterSpritesNode, options) {
   }
 }
 
-},{"./find-s3-src":5,"./find-visual-buff":6,"./format-appearance-img":7,"./format-equipment-img":8}],4:[function(require,module,exports){
+},{"./find-s3-src":10,"./find-visual-buff":11,"./format-appearance-img":12,"./format-equipment-img":13}],9:[function(require,module,exports){
 'use strict'
 
 module.exports = [{
@@ -415,7 +449,7 @@ module.exports = [{
   itemsKey: 'currentPet'
 }]
 
-},{}],5:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict'
 
 var S3 = 'https://s3.amazonaws.com/habitica-assets/mobileApp/images/'
@@ -446,7 +480,7 @@ module.exports = function (value) {
   return S3 + value + '.' + ext
 }
 
-},{}],6:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict'
 
 var VISUAL_BUFFS = {
@@ -476,7 +510,7 @@ module.exports = function findVisualBuff(user) {
   return buff
 };
 
-},{}],7:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 'use strict'
 
 module.exports = function (name, config) {
@@ -517,7 +551,7 @@ module.exports = function (name, config) {
   return String(s3Key)
 }
 
-},{}],8:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict'
 
 var EQUIPMENT_WITH_CUSTOM_STYLES = {
@@ -539,7 +573,7 @@ module.exports = function (equipment, img) {
   return equipment
 }
 
-},{}],9:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -704,7 +738,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],10:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 (function (global){
 'use strict'
 
@@ -1019,7 +1053,7 @@ Habitica.UnknownConnectionError = errors.UnknownConnectionError
 module.exports = Habitica
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./lib/connection":11,"./lib/errors":12}],11:[function(require,module,exports){
+},{"./lib/connection":16,"./lib/errors":17}],16:[function(require,module,exports){
 'use strict'
 
 var superagent = require('superagent')
@@ -1167,7 +1201,7 @@ Connection.prototype._router = function (method, route, options) {
 
 module.exports = Connection
 
-},{"./errors":12,"superagent":13}],12:[function(require,module,exports){
+},{"./errors":17,"superagent":18}],17:[function(require,module,exports){
 'use strict'
 
 function CustomError (message) {
@@ -1259,7 +1293,7 @@ module.exports = {
   UnknownConnectionError: UnknownConnectionError
 }
 
-},{}],13:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 /**
  * Root reference for iframes.
  */
@@ -2237,7 +2271,7 @@ request.put = function(url, data, fn){
   return req;
 };
 
-},{"./is-object":14,"./request":16,"./request-base":15,"emitter":9}],14:[function(require,module,exports){
+},{"./is-object":19,"./request":21,"./request-base":20,"emitter":14}],19:[function(require,module,exports){
 /**
  * Check if `obj` is an object.
  *
@@ -2252,7 +2286,7 @@ function isObject(obj) {
 
 module.exports = isObject;
 
-},{}],15:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 /**
  * Module of mixed-in functions shared between node and client code
  */
@@ -2626,7 +2660,7 @@ exports.send = function(data){
   return this;
 };
 
-},{"./is-object":14}],16:[function(require,module,exports){
+},{"./is-object":19}],21:[function(require,module,exports){
 // The node and browser modules expose versions of this with the
 // appropriate constructor function bound as first argument
 /**
@@ -2660,4 +2694,4 @@ function request(RequestConstructor, method, url) {
 
 module.exports = request;
 
-},{}]},{},[1]);
+},{}]},{},[3]);
