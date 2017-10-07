@@ -18,8 +18,8 @@ function chooseOption (event) {
     sections[i].classList.remove('active')
   }
 
-  for (var i = 0; i < menuOptions.length; i++) {
-    menuOptions[i].classList.remove('active')
+  for (var j = 0; j < menuOptions.length; j++) {
+    menuOptions[j].classList.remove('active')
   }
 
   element.classList.add('active')
