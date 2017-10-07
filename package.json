@@ -8,7 +8,7 @@
     "lib/*.js"
   ],
   "scripts": {
-    "build": "browserify -s habiticaAvatar habitica-avatar.js > dist/habitica-vatar.js",
+    "build": "browserify -s habiticaAvatar ./habitica-avatar.js > dist/habitica-avatar.js",
     "build:demo": "browserify docs/src/index.js > docs/script.js",
     "lint": "standard --verbose | snazzy",
     "server": "http-server -p3003 docs",
