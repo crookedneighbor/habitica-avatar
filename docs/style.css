@@ -26,12 +26,47 @@ select {
   width: 100%;
 }
 
+#selector ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#selector ul li {
+  display: inline-block;
+  padding: 0 5px;
+  cursor: pointer;
+}
+
+ul li.active {
+  text-decoration: underline;
+}
+
 .container {
   border-radius: 5px;
   background: rgb(249, 249, 249);
   padding: 20px;
   margin: 20px;
   display: block;
+}
+
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+.error {
+  margin: 20px;
+  background: pink;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.error:empty {
+  display: none;
 }
 
 #avatar-container {

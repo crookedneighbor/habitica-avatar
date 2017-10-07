@@ -9,12 +9,14 @@
     <div id="menu-container" class="container">
       <div id="selector">
         <ul>
-          <li>Avatar Selector</li>
-          <li>User ID</li>
+          <li id="select-avatar" data-section="selection" class="active">Avatar Selector</li>
+          <li id="select-user" data-section="user">User ID</li>
         </ul>
       </div>
 
-      <div id="selection" class="section">
+      <hr />
+
+      <div id="selection" class="section active">
         <div class="field">
           <label>Background</label>
           <select id="background"></select>
@@ -163,7 +165,7 @@
         </div>
 
         <div class="field">
-          <button id="make-avatar">Make Avatar</button>
+          <button id="selection-make-avatar">Make Avatar</button>
         </div>
 
         <div class="field">
@@ -172,12 +174,17 @@
       </div>
 
       <div id="user" class="section">
+        <div class="error"></div>
+
         <div class="field">
           <label>User ID</label>
           <input type="text" id="user-id" />
         </div>
-      </div>
 
+        <div class="field">
+          <button id="user-make-avatar">Make Avatar</button>
+        </div>
+      </div>
     </div>
 
     <div id="avatar-container" class="container"></div>
