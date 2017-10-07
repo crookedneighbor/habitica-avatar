@@ -10,7 +10,11 @@ describe('addImg', function () {
         currentMount: 'Wolf-Base',
         gear: {}
       },
-      preferences: {}
+      preferences: {},
+      stats: {
+        buffs: {},
+        class: 'wizard'
+      }
     }
     this.characterSpritesNode = makeFakeDomElement()
   })

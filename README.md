@@ -85,6 +85,7 @@ habiticaAvatar({
   user: user,
   ignore: {
     background: true,
+    visualBuff: true,
     mount: true,
     hair: true,
     chair: true,
@@ -116,7 +117,5 @@ A demo app is available at https://crookedneighbor.github.io/habitica-avatar/
 
 ## TODO
 
-- [ ] Add visual buff support
-- [ ] Add ability to ignore visual buff
 - [ ] Add ability to force costume
 - [ ] Add ability to force equipment

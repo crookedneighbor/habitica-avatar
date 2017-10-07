@@ -47,6 +47,10 @@ describe('Habitica Avatar', function () {
           color: 'black'
         },
         size: 'broad'
+      },
+      stats: {
+        buffs: {},
+        class: 'wizard'
       }
     }
   })

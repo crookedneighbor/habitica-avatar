@@ -19,6 +19,15 @@ function makeAvatar() {
   avatar = habiticaAvatar({
     container: avatarContainer,
     user: {
+      stats: {
+        buffs: {
+          snowball: getValue('visual-buff') === 'snowball',
+          spookySparkles: getValue('visual-buff') === 'spookySparkles',
+          shinySeed: getValue('visual-buff').split('.')[0] === 'shinySeed',
+          seafoam: getValue('visual-buff') === 'seafoam',
+        },
+        class: getValue('visual-buff').split('.')[1] || 'wizard'
+      },
       items: {
         currentMount: getValue('mount'),
         currentPet: getValue('pet'),
@@ -101,8 +110,6 @@ function randomizeSelect(name) {
   var random = Math.floor(Math.random() * options.length);
 
   if (!options[random]) {
-    console.log(name)
-    console.log(random)
     return
   }
   options[random].setAttribute('selected', true)
@@ -110,11 +117,6 @@ function randomizeSelect(name) {
 
 function populateSelect(name, object) {
   var select = document.querySelector('#' + name)
-
-  if (!select) {
-    console.log('couldn\'t find', name)
-    return
-  }
 
   Object.keys(object).forEach(function (key) {
     var selection = object[key]
@@ -172,7 +174,7 @@ api.get('/content').then((response) => {
   makeAvatar()
 })
 
-},{"../habitica-avatar":2,"habitica":9}],2:[function(require,module,exports){
+},{"../habitica-avatar":2,"habitica":10}],2:[function(require,module,exports){
 'use strict'
 
 var findS3Src = require('./lib/find-s3-src')
@@ -230,12 +232,15 @@ module.exports = habiticaAvatar
 var findS3Src = require('./find-s3-src')
 var formatEquipmentImg = require('./format-equipment-img')
 var formatAppearanceImg = require('./format-appearance-img')
+var findVisualBuff = require('./find-visual-buff')
+
 
 module.exports = function addImg (characterSpritesNode, options) {
   var user = options.user
   var appearance = user.preferences
   var gear = user.items.gear
   var ignore = options.ignore || {}
+  var visualBuff = findVisualBuff(user)
 
   return function (config) {
     var img = document.createElement('img')
@@ -245,13 +250,19 @@ module.exports = function addImg (characterSpritesNode, options) {
       return
     }
 
+    if (visualBuff && !config.showWhenVisualBuffApplied && !ignore.visualBuff) {
+      return
+    }
+
     img.style.position = 'absolute'
 
     if (config.style) {
       Object.assign(img.style, config.style)
     }
 
-    if (config.type === 'static') {
+    if (config.type === 'buff') {
+      s3Key = visualBuff
+    } else if (config.type === 'static') {
       s3Key = config.name
     } else if (config.type === 'equipment') {
       if (appearance.costume) {
@@ -287,7 +298,7 @@ module.exports = function addImg (characterSpritesNode, options) {
   }
 }
 
-},{"./find-s3-src":5,"./format-appearance-img":6,"./format-equipment-img":7}],4:[function(require,module,exports){
+},{"./find-s3-src":5,"./find-visual-buff":6,"./format-appearance-img":7,"./format-equipment-img":8}],4:[function(require,module,exports){
 'use strict'
 
 module.exports = [{
@@ -295,17 +306,19 @@ module.exports = [{
   prefix: 'Mount_Body_',
   itemsKey: 'currentMount',
   type: 'pet',
+  showWhenVisualBuffApplied: true,
   style: {
     marginTop: '18px'
   }
-// TODO
-// }, {
-//   name: 'visualBuff',
-//   type: 'buff'
+}, {
+  name: 'visualBuff',
+  showWhenVisualBuffApplied: true,
+  type: 'buff'
 }, {
   name: 'hair',
   subName: 'flower',
   prefix: 'hair_flower_',
+  showWhenVisualBuffApplied: true,
   type: 'appearance'
 }, {
   name: 'chair',
@@ -378,6 +391,7 @@ module.exports = [{
   type: 'equipment'
 }, {
   name: 'sleep',
+  showWhenVisualBuffApplied: true,
   type: 'appearance'
 }, {
   name: 'mount',
@@ -386,11 +400,13 @@ module.exports = [{
     marginTop: '18px'
   },
   prefix: 'Mount_Head_',
+  showWhenVisualBuffApplied: true,
   itemsKey: 'currentMount'
 }, {
   name: 'pet',
   type: 'pet',
   prefix: 'Pet-',
+  showWhenVisualBuffApplied: true,
   style: {
     left: '0px',
     bottom: '0px'
@@ -426,6 +442,36 @@ module.exports = function (value) {
 }
 
 },{}],6:[function(require,module,exports){
+'use strict'
+
+var VISUAL_BUFFS = {
+  snowball: 'snowman',
+  spookySparkles: 'ghost',
+  shinySeed: 'avatar_floral',
+  seafoam: 'seafoam_star'
+}
+
+module.exports = function findVisualBuff(user) {
+  var buffKey, buff
+
+  Object.keys(VISUAL_BUFFS).forEach(function (key) {
+    if (user.stats.buffs[key]) {
+      buffKey = key
+    }
+  })
+
+  if (buffKey) {
+    buff = VISUAL_BUFFS[buffKey]
+
+    if (buffKey === 'shinySeed') {
+      buff = buff + '_' + user.stats.class
+    }
+  }
+
+  return buff
+};
+
+},{}],7:[function(require,module,exports){
 'use strict'
 
 module.exports = function (name, config) {
@@ -466,7 +512,7 @@ module.exports = function (name, config) {
   return String(s3Key)
 }
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict'
 
 var EQUIPMENT_WITH_CUSTOM_STYLES = {
@@ -488,7 +534,7 @@ module.exports = function (equipment, img) {
   return equipment
 }
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -653,7 +699,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 (function (global){
 'use strict'
 
@@ -968,7 +1014,7 @@ Habitica.UnknownConnectionError = errors.UnknownConnectionError
 module.exports = Habitica
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./lib/connection":10,"./lib/errors":11}],10:[function(require,module,exports){
+},{"./lib/connection":11,"./lib/errors":12}],11:[function(require,module,exports){
 'use strict'
 
 var superagent = require('superagent')
@@ -1116,7 +1162,7 @@ Connection.prototype._router = function (method, route, options) {
 
 module.exports = Connection
 
-},{"./errors":11,"superagent":12}],11:[function(require,module,exports){
+},{"./errors":12,"superagent":13}],12:[function(require,module,exports){
 'use strict'
 
 function CustomError (message) {
@@ -1208,7 +1254,7 @@ module.exports = {
   UnknownConnectionError: UnknownConnectionError
 }
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 /**
  * Root reference for iframes.
  */
@@ -2186,7 +2232,7 @@ request.put = function(url, data, fn){
   return req;
 };
 
-},{"./is-object":13,"./request":15,"./request-base":14,"emitter":8}],13:[function(require,module,exports){
+},{"./is-object":14,"./request":16,"./request-base":15,"emitter":9}],14:[function(require,module,exports){
 /**
  * Check if `obj` is an object.
  *
@@ -2201,7 +2247,7 @@ function isObject(obj) {
 
 module.exports = isObject;
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 /**
  * Module of mixed-in functions shared between node and client code
  */
@@ -2575,7 +2621,7 @@ exports.send = function(data){
   return this;
 };
 
-},{"./is-object":13}],15:[function(require,module,exports){
+},{"./is-object":14}],16:[function(require,module,exports){
 // The node and browser modules expose versions of this with the
 // appropriate constructor function bound as first argument
 /**

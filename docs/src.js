@@ -18,6 +18,15 @@ function makeAvatar() {
   avatar = habiticaAvatar({
     container: avatarContainer,
     user: {
+      stats: {
+        buffs: {
+          snowball: getValue('visual-buff') === 'snowball',
+          spookySparkles: getValue('visual-buff') === 'spookySparkles',
+          shinySeed: getValue('visual-buff').split('.')[0] === 'shinySeed',
+          seafoam: getValue('visual-buff') === 'seafoam',
+        },
+        class: getValue('visual-buff').split('.')[1] || 'wizard'
+      },
       items: {
         currentMount: getValue('mount'),
         currentPet: getValue('pet'),
@@ -100,8 +109,6 @@ function randomizeSelect(name) {
   var random = Math.floor(Math.random() * options.length);
 
   if (!options[random]) {
-    console.log(name)
-    console.log(random)
     return
   }
   options[random].setAttribute('selected', true)
@@ -109,11 +116,6 @@ function randomizeSelect(name) {
 
 function populateSelect(name, object) {
   var select = document.querySelector('#' + name)
-
-  if (!select) {
-    console.log('couldn\'t find', name)
-    return
-  }
 
   Object.keys(object).forEach(function (key) {
     var selection = object[key]
