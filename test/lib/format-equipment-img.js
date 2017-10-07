@@ -16,6 +16,13 @@ describe('formatEquipment', function () {
     expect(name).to.not.exist
   })
 
+  it('returns nothing if equipment does not exist', function () {
+    var empty
+    var name = formatEquipment(empty, {})
+
+    expect(name).to.not.exist
+  })
+
   it('assigns extra styles to image if item is weapon_special_critical', function () {
     var img = {
       style: {
