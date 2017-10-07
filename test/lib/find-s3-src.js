@@ -10,6 +10,10 @@ describe('findS3Src', function () {
 
   it('returns gif extension for special keys', function () {
     [
+      'broad_armor_special_0',
+      'slim_armor_special_0',
+      'broad_armor_special_1',
+      'slim_armor_special_1',
       'head_special_0',
       'head_special_1',
       'shield_special_0',
