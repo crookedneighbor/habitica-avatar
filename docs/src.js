@@ -32,10 +32,11 @@ function makeAvatar() {
         currentPet: getValue('pet'),
         gear: {
           costume: {
-            headAccessory: getValue('headAccessory'),
-            eyewear: getValue('eyewear'),
-            back: getValue('back'),
+            body: getValue('body'),
             weapon: getValue('weapon'),
+            headAccessory: getValue('headAccessory'),
+            back: getValue('back'),
+            eyewear: getValue('eyewear'),
             shield: getValue('shield'),
             head: getValue('head'),
             armor: getValue('armor')

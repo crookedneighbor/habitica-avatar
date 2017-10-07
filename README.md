@@ -105,6 +105,28 @@ habiticaAvatar({
 })
 ```
 
+### Force Costume
+
+By default, the costume will render if the user has the costume feature turned on. You can force the costume to be shown with the `forceCostume` option.
+
+```js
+habiticaAvatar({
+  user: user,
+  forceCostume: true
+})
+```
+
+### Force Equipment
+
+By default, the equipment will render if the user has the costume feature turned off. You can force the equipment to be shown with the `forceEquipment` option.
+
+```js
+habiticaAvatar({
+  user: user,
+  forceEquipment: true
+})
+```
+
 ## Testing
 
 ```sh
@@ -114,8 +136,3 @@ npm test
 ## Demo App
 
 A demo app is available at https://crookedneighbor.github.io/habitica-avatar/
-
-## TODO
-
-- [ ] Add ability to force costume
-- [ ] Add ability to force equipment

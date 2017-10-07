@@ -33,10 +33,11 @@ function makeAvatar() {
         currentPet: getValue('pet'),
         gear: {
           costume: {
-            headAccessory: getValue('headAccessory'),
-            eyewear: getValue('eyewear'),
-            back: getValue('back'),
+            body: getValue('body'),
             weapon: getValue('weapon'),
+            headAccessory: getValue('headAccessory'),
+            back: getValue('back'),
+            eyewear: getValue('eyewear'),
             shield: getValue('shield'),
             head: getValue('head'),
             armor: getValue('armor')
@@ -265,7 +266,7 @@ module.exports = function addImg (characterSpritesNode, options) {
     } else if (config.type === 'static') {
       s3Key = config.name
     } else if (config.type === 'equipment') {
-      if (appearance.costume) {
+      if ((appearance.costume && !options.forceEquipment) || options.forceCostume) {
         s3Key = formatEquipmentImg(gear.costume[config.name], img)
       } else {
         s3Key = formatEquipmentImg(gear.equipped[config.name], img)
@@ -420,6 +421,10 @@ module.exports = [{
 var S3 = 'https://s3.amazonaws.com/habitica-assets/mobileApp/images/'
 
 var GIFS = [
+  'broad_armor_special_0',
+  'slim_armor_special_0',
+  'broad_armor_special_1',
+  'slim_armor_special_1',
   'head_special_0',
   'head_special_1',
   'shield_special_0',
