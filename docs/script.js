@@ -5,7 +5,7 @@ var Habitica = require('habitica')
 
 module.exports = new Habitica()
 
-},{"habitica":17}],2:[function(require,module,exports){
+},{"habitica":18}],2:[function(require,module,exports){
 'use strict'
 
 var api = require('./api')
@@ -22,8 +22,6 @@ module.exports = function () {
 module.exports = function getValue (name) {
   return document.querySelector('#' + name).value
 }
-
-
 
 },{}],4:[function(require,module,exports){
 'use strict'
@@ -46,8 +44,8 @@ function chooseOption (event) {
     sections[i].classList.remove('active')
   }
 
-  for (var i = 0; i < menuOptions.length; i++) {
-    menuOptions[i].classList.remove('active')
+  for (var j = 0; j < menuOptions.length; j++) {
+    menuOptions[j].classList.remove('active')
   }
 
   element.classList.add('active')
@@ -280,6 +278,7 @@ module.exports = function (content) {
 
 var findS3Src = require('./lib/find-s3-src')
 var addImg = require('./lib/add-img')
+var isHabitica = require('./lib/is-habitica')
 
 var CHARACTER_SPRITE_NODES = require('./lib/character-sprites-config')
 
@@ -288,6 +287,7 @@ function habiticaAvatar (options) {
   var container = options.container
   var ignore = options.ignore || {}
   var appearance = user.preferences
+  var useClassMode = Boolean(isHabitica() || options.forceClassMode)
 
   var avatarContainer = document.createElement('div')
   var characterSprites = document.createElement('div')
@@ -303,14 +303,24 @@ function habiticaAvatar (options) {
   }
 
   if (appearance.background && !ignore.background) {
-    avatarContainer.style.backgroundImage = 'url("' + findS3Src('background_' + appearance.background) + '")'
+    if (useClassMode) {
+      avatarContainer.classList.add('background_' + appearance.background)
+    } else {
+      avatarContainer.style.backgroundImage = 'url("' + findS3Src('background_' + appearance.background) + '")'
+    }
   }
 
   characterSprites.style.margin = '0 auto 0 24px'
   characterSprites.style.width = '90px'
   characterSprites.style.height = '90px'
 
-  CHARACTER_SPRITE_NODES.forEach(addImg(characterSprites, options))
+  CHARACTER_SPRITE_NODES.forEach(addImg(characterSprites, {
+    user: options.user,
+    ignore: options.ignore,
+    forceEquipment: options.forceEquipment,
+    forceCostume: options.forceCostume,
+    useClassMode: useClassMode
+  }))
 
   avatarContainer.appendChild(characterSprites)
 
@@ -327,7 +337,7 @@ function habiticaAvatar (options) {
 
 module.exports = habiticaAvatar
 
-},{"./lib/add-img":10,"./lib/character-sprites-config":11,"./lib/find-s3-src":12}],10:[function(require,module,exports){
+},{"./lib/add-img":10,"./lib/character-sprites-config":11,"./lib/find-s3-src":12,"./lib/is-habitica":16}],10:[function(require,module,exports){
 'use strict'
 
 var findS3Src = require('./find-s3-src')
@@ -340,11 +350,17 @@ module.exports = function addImg (characterSpritesNode, options) {
   var appearance = user.preferences
   var gear = user.items.gear
   var ignore = options.ignore || {}
+  var useClassMode = options.useClassMode
   var visualBuff = findVisualBuff(user)
 
   return function (config) {
-    var img = document.createElement('img')
-    var s3Key
+    var element, s3Key
+
+    if (useClassMode) {
+      element = document.createElement('div')
+    } else {
+      element = document.createElement('img')
+    }
 
     if (ignore[config.name]) {
       return
@@ -354,10 +370,10 @@ module.exports = function addImg (characterSpritesNode, options) {
       return
     }
 
-    img.style.position = 'absolute'
+    element.style.position = 'absolute'
 
     if (config.style) {
-      Object.assign(img.style, config.style)
+      Object.assign(element.style, config.style)
     }
 
     if (config.type === 'buff') {
@@ -366,9 +382,9 @@ module.exports = function addImg (characterSpritesNode, options) {
       s3Key = config.name
     } else if (config.type === 'equipment') {
       if ((appearance.costume && !options.forceEquipment) || options.forceCostume) {
-        s3Key = formatEquipmentImg(gear.costume[config.name], img)
+        s3Key = formatEquipmentImg(gear.costume[config.name], element)
       } else {
-        s3Key = formatEquipmentImg(gear.equipped[config.name], img)
+        s3Key = formatEquipmentImg(gear.equipped[config.name], element)
       }
     } else if (config.type === 'appearance') {
       s3Key = formatAppearanceImg(config.name, {
@@ -392,9 +408,13 @@ module.exports = function addImg (characterSpritesNode, options) {
       s3Key = appearance.size + '_' + s3Key
     }
 
-    img.src = findS3Src(s3Key)
+    if (useClassMode) {
+      element.classList.add(s3Key)
+    } else {
+      element.src = findS3Src(s3Key)
+    }
 
-    characterSpritesNode.appendChild(img)
+    characterSpritesNode.appendChild(element)
   }
 }
 
@@ -639,6 +659,15 @@ module.exports = function (equipment, img) {
 }
 
 },{}],16:[function(require,module,exports){
+(function (global){
+'use strict'
+
+module.exports = function () {
+  return global.location.host === 'habitica.com'
+}
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],17:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -803,7 +832,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 (function (global){
 'use strict'
 
@@ -1118,7 +1147,7 @@ Habitica.UnknownConnectionError = errors.UnknownConnectionError
 module.exports = Habitica
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./lib/connection":18,"./lib/errors":19}],18:[function(require,module,exports){
+},{"./lib/connection":19,"./lib/errors":20}],19:[function(require,module,exports){
 'use strict'
 
 var superagent = require('superagent')
@@ -1266,7 +1295,7 @@ Connection.prototype._router = function (method, route, options) {
 
 module.exports = Connection
 
-},{"./errors":19,"superagent":20}],19:[function(require,module,exports){
+},{"./errors":20,"superagent":21}],20:[function(require,module,exports){
 'use strict'
 
 function CustomError (message) {
@@ -1358,7 +1387,7 @@ module.exports = {
   UnknownConnectionError: UnknownConnectionError
 }
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 /**
  * Root reference for iframes.
  */
@@ -2336,7 +2365,7 @@ request.put = function(url, data, fn){
   return req;
 };
 
-},{"./is-object":21,"./request":23,"./request-base":22,"emitter":16}],21:[function(require,module,exports){
+},{"./is-object":22,"./request":24,"./request-base":23,"emitter":17}],22:[function(require,module,exports){
 /**
  * Check if `obj` is an object.
  *
@@ -2351,7 +2380,7 @@ function isObject(obj) {
 
 module.exports = isObject;
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 /**
  * Module of mixed-in functions shared between node and client code
  */
@@ -2725,7 +2754,7 @@ exports.send = function(data){
   return this;
 };
 
-},{"./is-object":21}],23:[function(require,module,exports){
+},{"./is-object":22}],24:[function(require,module,exports){
 // The node and browser modules expose versions of this with the
 // appropriate constructor function bound as first argument
 /**

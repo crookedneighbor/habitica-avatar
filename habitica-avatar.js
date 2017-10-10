@@ -2,6 +2,7 @@
 
 var findS3Src = require('./lib/find-s3-src')
 var addImg = require('./lib/add-img')
+var isHabitica = require('./lib/is-habitica')
 
 var CHARACTER_SPRITE_NODES = require('./lib/character-sprites-config')
 
@@ -10,6 +11,7 @@ function habiticaAvatar (options) {
   var container = options.container
   var ignore = options.ignore || {}
   var appearance = user.preferences
+  var useClassMode = Boolean(isHabitica() || options.forceClassMode)
 
   var avatarContainer = document.createElement('div')
   var characterSprites = document.createElement('div')
@@ -25,14 +27,24 @@ function habiticaAvatar (options) {
   }
 
   if (appearance.background && !ignore.background) {
-    avatarContainer.style.backgroundImage = 'url("' + findS3Src('background_' + appearance.background) + '")'
+    if (useClassMode) {
+      avatarContainer.classList.add('background_' + appearance.background)
+    } else {
+      avatarContainer.style.backgroundImage = 'url("' + findS3Src('background_' + appearance.background) + '")'
+    }
   }
 
   characterSprites.style.margin = '0 auto 0 24px'
   characterSprites.style.width = '90px'
   characterSprites.style.height = '90px'
 
-  CHARACTER_SPRITE_NODES.forEach(addImg(characterSprites, options))
+  CHARACTER_SPRITE_NODES.forEach(addImg(characterSprites, {
+    user: options.user,
+    ignore: options.ignore,
+    forceEquipment: options.forceEquipment,
+    forceCostume: options.forceCostume,
+    useClassMode: useClassMode
+  }))
 
   avatarContainer.appendChild(characterSprites)
 

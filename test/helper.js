@@ -17,6 +17,9 @@ global.makeFakeDomElement = () => {
 }
 
 beforeEach(function () {
+  global.location ={
+    host: 'example.com'
+  }
   global.document = {
     appendChild: sandbox.stub(),
     createElement: sandbox.stub().returns(makeFakeDomElement()),
