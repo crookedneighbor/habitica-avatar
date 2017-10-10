@@ -1,7 +1,7 @@
 'use strict'
 
 var findS3Src = require('./lib/find-s3-src')
-var addImg = require('./lib/add-img')
+var addLayer = require('./lib/add-layer')
 var isHabitica = require('./lib/is-habitica')
 
 var CHARACTER_SPRITE_NODES = require('./lib/character-sprites-config')
@@ -38,7 +38,7 @@ function habiticaAvatar (options) {
   characterSprites.style.width = '90px'
   characterSprites.style.height = '90px'
 
-  CHARACTER_SPRITE_NODES.forEach(addImg(characterSprites, {
+  CHARACTER_SPRITE_NODES.forEach(addLayer(characterSprites, {
     user: options.user,
     ignore: options.ignore,
     forceEquipment: options.forceEquipment,

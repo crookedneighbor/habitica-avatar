@@ -1,9 +1,9 @@
 'use strict'
 /* eslint-disable no-unused-expressions */
 
-var addImg = require('../../lib/add-img')
+var addLayer = require('../../lib/add-layer')
 
-describe('addImg', function () {
+describe('addLayer', function () {
   beforeEach(function () {
     this.user = {
       items: {
@@ -20,7 +20,7 @@ describe('addImg', function () {
   })
 
   it('returns a function', function () {
-    var func = addImg(this.characterSpritesNode, {
+    var func = addLayer(this.characterSpritesNode, {
       user: this.user
     })
 
@@ -30,10 +30,10 @@ describe('addImg', function () {
   it('can ignore keys', function () {
     var characterSpritesWithMount = makeFakeDomElement()
     var characterSpritesWithoutMount = makeFakeDomElement()
-    var funcWithMount = addImg(characterSpritesWithMount, {
+    var funcWithMount = addLayer(characterSpritesWithMount, {
       user: this.user
     })
-    var funcWithoutMount = addImg(characterSpritesWithoutMount, {
+    var funcWithoutMount = addLayer(characterSpritesWithoutMount, {
       user: this.user,
       ignore: {
         mount: true
