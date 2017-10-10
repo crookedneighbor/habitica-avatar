@@ -17,7 +17,7 @@ global.makeFakeDomElement = () => {
 }
 
 beforeEach(function () {
-  global.location ={
+  global.location = {
     host: 'example.com'
   }
   global.document = {
