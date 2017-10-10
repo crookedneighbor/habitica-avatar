@@ -12,6 +12,7 @@
     "build:demo": "browserify docs/src/index.js > docs/script.js",
     "lint": "standard --verbose | snazzy",
     "server": "http-server -p3003 docs",
+    "pretest": "npm run lint",
     "test": "mocha test --recursive"
   },
   "keywords": [],
