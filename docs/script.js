@@ -164,13 +164,9 @@ module.exports = function () {
   error.innerText = ''
   avatarContainer.innerHTML = ''
 
-  api.get('/members/' + uuid).then(function (response) {
-    console.log(response.data)
-    var avatar = habiticaAvatar({
-      container: avatarContainer,
-      user: response.data
-    })
-
+  habiticaAvatar.fromUserId(uuid, {
+    container: avatarContainer,
+  }).then(function (avatar) {
     avatar.id = 'avatar'
   }).catch(function (err) {
     console.error(err)
@@ -277,8 +273,11 @@ module.exports = function (content) {
 'use strict'
 
 var findS3Src = require('./lib/find-s3-src')
-var addImg = require('./lib/add-img')
+var addLayer = require('./lib/add-layer')
 var isHabitica = require('./lib/is-habitica')
+var Habitica = require('habitica')
+
+var api = new Habitica()
 
 var CHARACTER_SPRITE_NODES = require('./lib/character-sprites-config')
 
@@ -314,7 +313,7 @@ function habiticaAvatar (options) {
   characterSprites.style.width = '90px'
   characterSprites.style.height = '90px'
 
-  CHARACTER_SPRITE_NODES.forEach(addImg(characterSprites, {
+  CHARACTER_SPRITE_NODES.forEach(addLayer(characterSprites, {
     user: options.user,
     ignore: options.ignore,
     forceEquipment: options.forceEquipment,
@@ -335,9 +334,17 @@ function habiticaAvatar (options) {
   return avatarContainer
 }
 
+habiticaAvatar.fromUserId = function (userId, options) {
+  return api.get('/members/' + userId).then(function (response) {
+    var config = Object.assign({}, options, {user: response.data})
+
+    return habiticaAvatar(config)
+  })
+}
+
 module.exports = habiticaAvatar
 
-},{"./lib/add-img":10,"./lib/character-sprites-config":11,"./lib/find-s3-src":12,"./lib/is-habitica":16}],10:[function(require,module,exports){
+},{"./lib/add-layer":10,"./lib/character-sprites-config":11,"./lib/find-s3-src":12,"./lib/is-habitica":16,"habitica":18}],10:[function(require,module,exports){
 'use strict'
 
 var findS3Src = require('./find-s3-src')

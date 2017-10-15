@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-expressions */
 
 var habiticaAvatar = require('../habitica-avatar')
+var Habitica = require('habitica')
 
 describe('Habitica Avatar', function () {
   beforeEach(function () {
@@ -196,5 +197,48 @@ describe('Habitica Avatar', function () {
         user: this.user
       })
     }).to.not.throw()
+  })
+
+  describe('fromUserId', function () {
+    beforeEach(function () {
+      sandbox.stub(Habitica.prototype, 'get').resolves({
+        data: this.user
+      })
+    })
+
+    it('looks up member to get user object', function () {
+      return habiticaAvatar.fromUserId('user-id').then(() => {
+        expect(Habitica.prototype.get).to.be.calledOnce
+        expect(Habitica.prototype.get).to.be.calledWith('/members/user-id')
+      })
+    })
+
+    it('creates a habitica avatar from fetched user object', function () {
+      return habiticaAvatar.fromUserId('user-id').then((avatar) => {
+        expect(avatar.style.backgroundImage).to.contain('background_alpine_slopes')
+      })
+    })
+
+    it('passes in additional options', function () {
+      return habiticaAvatar.fromUserId('user-id', {
+        ignore: {
+          background: true
+        }
+      }).then((avatar) => {
+        expect(avatar.style.backgroundImage).to.not.exist
+      })
+    })
+
+    it('ignores user properties in options', function () {
+      return habiticaAvatar.fromUserId('user-id', {
+        user: {
+          preferences: {
+            background: 'foo-background'
+          }
+        }
+      }).then((avatar) => {
+        expect(avatar.style.backgroundImage).to.contain('background_alpine_slopes')
+      })
+    })
   })
 })

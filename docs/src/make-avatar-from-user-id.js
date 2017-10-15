@@ -13,13 +13,9 @@ module.exports = function () {
   error.innerText = ''
   avatarContainer.innerHTML = ''
 
-  api.get('/members/' + uuid).then(function (response) {
-    console.log(response.data)
-    var avatar = habiticaAvatar({
-      container: avatarContainer,
-      user: response.data
-    })
-
+  habiticaAvatar.fromUserId(uuid, {
+    container: avatarContainer,
+  }).then(function (avatar) {
     avatar.id = 'avatar'
   }).catch(function (err) {
     console.error(err)

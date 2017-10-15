@@ -3,6 +3,9 @@
 var findS3Src = require('./lib/find-s3-src')
 var addLayer = require('./lib/add-layer')
 var isHabitica = require('./lib/is-habitica')
+var Habitica = require('habitica')
+
+var api = new Habitica()
 
 var CHARACTER_SPRITE_NODES = require('./lib/character-sprites-config')
 
@@ -57,6 +60,14 @@ function habiticaAvatar (options) {
   }
 
   return avatarContainer
+}
+
+habiticaAvatar.fromUserId = function (userId, options) {
+  return api.get('/members/' + userId).then(function (response) {
+    var config = Object.assign({}, options, {user: response.data})
+
+    return habiticaAvatar(config)
+  })
 }
 
 module.exports = habiticaAvatar

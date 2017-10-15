@@ -32,21 +32,37 @@ window.habiticaAvatar({
 
 ## Advanced options
 
-### with Habitica npm package
+### Looking up user avatar by user id
 
-Using the [habitica npm package](https://www.npmjs.com/package/habitica), you can fetch a user's data and pass the object directly into the `habiticaAvatar` function.
+The `fromUserId` method on `habiticaAvatar` takes a user id and any additional options you would normally pass into `habiticaAvatar` and returns a Promise that resolves with the avatar.
 
 ```js
-var Habitica = require('habitica')
-var habiticaAvatar = require('habitica-avatar')
+habiticaAvatar.fromUserId('user-id', {
+  ignore: {
+    background: true
+  },
+  // any other options
+}).then(function (avatar) {
+  // insert avatar onto your page
+  document.body.appendChild(avatar)
+})
 
-var api = new Habitica()
+// or
 
-api.get('/members/user-uuid').then(function (response) {
-  habiticaAvatar({
-    container: '#div-to-put-avatar',
-    user: response.data
-  })
+habiticaAvatar.fromUserId('user-id', {
+  container: '#my-div',
+  // any other options
+})
+// The avatar will be inserted into `#my-div` when the user look up is complete
+```
+
+If the user id does not resolve with a user, the Promise will reject.
+
+```js
+habiticaAvatar.fromUserId('id-that-does-not-belong-to-a-user').then(function (avatar) {
+  // will never get here
+}).catch(function (err) {
+  // user could not be found
 })
 ```
 
