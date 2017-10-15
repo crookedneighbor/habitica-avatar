@@ -1,6 +1,5 @@
 'use strict'
 
-var api = require('./api')
 var habiticaAvatar = require('../../habitica-avatar')
 var getValue = require('./get-value')
 
@@ -14,7 +13,7 @@ module.exports = function () {
   avatarContainer.innerHTML = ''
 
   habiticaAvatar.fromUserId(uuid, {
-    container: avatarContainer,
+    container: avatarContainer
   }).then(function (avatar) {
     avatar.id = 'avatar'
   }).catch(function (err) {
