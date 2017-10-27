@@ -152,3 +152,25 @@ npm test
 ## Demo App
 
 A demo app is available at https://crookedneighbor.github.io/habitica-avatar/
+
+## Embed on your site
+
+You can drop this iframe directly onto your site to display your avatar. Just replace `YOUR_USER_ID` with your user id. (Found in [settings](https://habitica.com/user/settings/api))
+
+```html
+<iframe
+  src="https://crookedneighbor.github.io/habitica-avatar/avatar.html#YOUR_USER_ID"
+  scrolling="no"
+  style="width: 140px; height: 147px; overflow-y: hidden; border: none;"
+></iframe>
+```
+
+So, for instance, to display _my_ avatar, you'd put this on your page:
+
+```html
+<iframe
+  src="https://crookedneighbor.github.io/habitica-avatar/avatar.html#75f270e8-c5db-4722-a5e6-a83f1b23f76b"
+  scrolling="no"
+  style="width: 140px; height: 147px; overflow-y: hidden; border: none;"
+></iframe>
+```
