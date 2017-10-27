@@ -3,14 +3,8 @@
 var habiticaAvatar = require('../../habitica-avatar')
 
 function populateAvatar () {
-  var id
-  var frame = window.frameElement
-
-  if (!frame) {
-    return;
-  }
-
-  id = frame.getAttribute("data-user-id");
+  var hash = global.location.hash
+  var id = hash.substring(1, hash.length)
 
   if (!id) {
     return;
