@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "build": "browserify -s habiticaAvatar ./habitica-avatar.js > dist/habitica-avatar.js",
-    "build:demo": "browserify docs/src/index.js > docs/script.js",
+    "build:demo": "browserify docs/src/index.js > docs/script.js && browserify docs/src/avatar.js > docs/avatar-script.js",
     "lint": "standard --verbose | snazzy",
     "server": "http-server -p3003 docs",
     "pretest": "npm run lint",

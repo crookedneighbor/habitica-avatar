@@ -1,274 +1,30 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict'
 
-var Habitica = require('habitica')
-
-module.exports = new Habitica()
-
-},{"habitica":18}],2:[function(require,module,exports){
-'use strict'
-
-var api = require('./api')
-
-module.exports = function () {
-  return api.get('/content').then(function (response) {
-    return response.data
-  })
-}
-
-},{"./api":1}],3:[function(require,module,exports){
-'use strict'
-
-module.exports = function getValue (name) {
-  return document.querySelector('#' + name).value
-}
-
-},{}],4:[function(require,module,exports){
-'use strict'
-
-var getContent = require('./get-content')
-var randomizeSelects = require('./randomize-selects')
-var setUpSelects = require('./set-up-selects')
-var makeAvatarFromSelections = require('./make-avatar-from-selections')
-var makeAvatarFromUserId = require('./make-avatar-from-user-id')
-
-var menuOptions = document.querySelectorAll('#selector ul li')
-
-function chooseOption (event) {
-  var element = event.srcElement
-  var selection = element.getAttribute('data-section')
-  var sections = document.querySelectorAll('.section')
-  var section = document.querySelector('#' + selection)
-
-  for (var i = 0; i < sections.length; i++) {
-    sections[i].classList.remove('active')
-  }
-
-  for (var j = 0; j < menuOptions.length; j++) {
-    menuOptions[j].classList.remove('active')
-  }
-
-  element.classList.add('active')
-  section.classList.add('active')
-}
-
-getContent().then(setUpSelects).then(function () {
-  document
-    .querySelector('#selection-make-avatar')
-    .addEventListener('click', makeAvatarFromSelections)
-  document
-    .querySelector('#randomize')
-    .addEventListener('click', randomizeSelects)
-  document
-    .querySelector('#user-make-avatar')
-    .addEventListener('click', makeAvatarFromUserId)
-
-  document
-    .querySelector('#select-avatar')
-    .addEventListener('click', chooseOption)
-  document
-    .querySelector('#select-user')
-    .addEventListener('click', chooseOption)
-
-  randomizeSelects()
-
-  makeAvatarFromSelections()
-})
-
-},{"./get-content":2,"./make-avatar-from-selections":5,"./make-avatar-from-user-id":6,"./randomize-selects":7,"./set-up-selects":8}],5:[function(require,module,exports){
-'use strict'
-
 var habiticaAvatar = require('../../habitica-avatar')
-var getValue = require('./get-value')
-var avatarContainer = document.querySelector('#avatar-container')
 
-module.exports = function makeAvatar () {
-  var avatar
+function populateAvatar () {
+  var id
+  var frame = window.frameElement
 
-  avatarContainer.innerHTML = ''
-
-  avatar = habiticaAvatar({
-    container: avatarContainer,
-    user: {
-      stats: {
-        buffs: {
-          snowball: getValue('visual-buff') === 'snowball',
-          spookySparkles: getValue('visual-buff') === 'spookySparkles',
-          shinySeed: getValue('visual-buff').split('.')[0] === 'shinySeed',
-          seafoam: getValue('visual-buff') === 'seafoam'
-        },
-        class: getValue('visual-buff').split('.')[1] || 'wizard'
-      },
-      items: {
-        currentMount: getValue('mount'),
-        currentPet: getValue('pet'),
-        gear: {
-          costume: {
-            body: getValue('body'),
-            weapon: getValue('weapon'),
-            headAccessory: getValue('headAccessory'),
-            back: getValue('back'),
-            eyewear: getValue('eyewear'),
-            shield: getValue('shield'),
-            head: getValue('head'),
-            armor: getValue('armor')
-          },
-          equipped: {
-            body: getValue('body'),
-            weapon: getValue('weapon'),
-            headAccessory: getValue('headAccessory'),
-            back: getValue('back'),
-            eyewear: getValue('eyewear'),
-            shield: getValue('shield'),
-            head: getValue('head'),
-            armor: getValue('armor')
-          }
-        }
-      },
-      preferences: {
-        costume: false,
-        background: getValue('background'),
-        sleep: getValue('sleep') === 'true',
-        chair: getValue('chair'),
-        shirt: getValue('shirt'),
-        skin: getValue('skin'),
-        hair: {
-          flower: getValue('flower'),
-          mustache: getValue('mustache'),
-          beard: getValue('beard'),
-          bangs: getValue('bangs'),
-          base: getValue('base'),
-          color: getValue('color')
-        },
-        size: getValue('size')
-      }
-    }
-  })
-
-  avatar.id = 'avatar'
-}
-
-},{"../../habitica-avatar":9,"./get-value":3}],6:[function(require,module,exports){
-'use strict'
-
-var habiticaAvatar = require('../../habitica-avatar')
-var getValue = require('./get-value')
-
-var avatarContainer = document.querySelector('#avatar-container')
-var error = document.querySelector('#user .error')
-
-module.exports = function () {
-  var uuid = getValue('user-id')
-
-  error.innerText = ''
-  avatarContainer.innerHTML = ''
-
-  habiticaAvatar.fromUserId(uuid, {
-    container: avatarContainer
-  }).then(function (avatar) {
-    avatar.id = 'avatar'
-  }).catch(function (err) {
-    console.error(err)
-    error.innerText = 'There was an error looking up the user.'
-  })
-}
-
-},{"../../habitica-avatar":9,"./get-value":3}],7:[function(require,module,exports){
-'use strict'
-
-var selects = [
-  'background',
-  'sleep',
-  'chair',
-  'base',
-  'beard',
-  'mustache',
-  'color',
-  'flower',
-  'size',
-  'shirt',
-  'skin',
-  'pet',
-  'mount',
-  'weapon',
-  'shield',
-  'armor',
-  'head',
-  'headAccessory',
-  'back',
-  'body',
-  'eyewear'
-]
-
-function randomizeSelect (name) {
-  var select = document.querySelector('#' + name)
-  var options = select.querySelectorAll('option')
-  var random = Math.floor(Math.random() * options.length)
-
-  if (!options[random]) {
-    return
+  if (!frame) {
+    return;
   }
-  options[random].setAttribute('selected', true)
-}
 
-module.exports = function randomizeSelects () {
-  selects.forEach(randomizeSelect)
-}
+  id = frame.getAttribute("data-user-id");
 
-},{}],8:[function(require,module,exports){
-'use strict'
+  if (!id) {
+    return;
+  }
 
-function populateSelect (name, object) {
-  var select = document.querySelector('#' + name)
-
-  Object.keys(object).forEach(function (key) {
-    var selection = object[key]
-    var optionNode = document.createElement('option')
-
-    optionNode.value = selection.key
-    optionNode.innerText = selection.text || selection.key
-
-    select.appendChild(optionNode)
+  habiticaAvatar.fromUserId(id, {
+    container: '#container'
   })
 }
 
-module.exports = function (content) {
-  var appearances = content.appearances
-  var equipmentByGroup
+populateAvatar()
 
-  populateSelect('background', content.backgroundsFlat)
-  populateSelect('chair', appearances.chair)
-
-  Object.keys(appearances.hair).forEach(function (hairType) {
-    populateSelect(hairType, appearances.hair[hairType])
-  })
-
-  populateSelect('size', appearances.size)
-  populateSelect('shirt', appearances.shirt)
-  populateSelect('skin', appearances.skin)
-
-  populateSelect('pet', content.petInfo)
-  populateSelect('mount', content.mountInfo)
-
-  equipmentByGroup = Object.keys(content.gear.flat).reduce(function (equipment, key) {
-    var gear = content.gear.flat[key]
-
-    equipment[gear.type] = equipment[gear.type] || {}
-
-    equipment[gear.type][gear.key] = {
-      key: gear.key,
-      text: gear.text
-    }
-
-    return equipment
-  }, {})
-
-  Object.keys(equipmentByGroup).forEach(function (type) {
-    populateSelect(type, equipmentByGroup[type])
-  })
-}
-
-},{}],9:[function(require,module,exports){
+},{"../../habitica-avatar":2}],2:[function(require,module,exports){
 'use strict'
 
 var findS3Src = require('./lib/find-s3-src')
@@ -343,7 +99,7 @@ habiticaAvatar.fromUserId = function (userId, options) {
 
 module.exports = habiticaAvatar
 
-},{"./lib/add-layer":10,"./lib/character-sprites-config":11,"./lib/find-s3-src":12,"./lib/is-habitica":16,"habitica":18}],10:[function(require,module,exports){
+},{"./lib/add-layer":3,"./lib/character-sprites-config":4,"./lib/find-s3-src":5,"./lib/is-habitica":9,"habitica":11}],3:[function(require,module,exports){
 'use strict'
 
 var findS3Src = require('./find-s3-src')
@@ -424,7 +180,7 @@ module.exports = function addImg (characterSpritesNode, options) {
   }
 }
 
-},{"./find-s3-src":12,"./find-visual-buff":13,"./format-appearance-img":14,"./format-equipment-img":15}],11:[function(require,module,exports){
+},{"./find-s3-src":5,"./find-visual-buff":6,"./format-appearance-img":7,"./format-equipment-img":8}],4:[function(require,module,exports){
 'use strict'
 
 module.exports = [{
@@ -540,7 +296,7 @@ module.exports = [{
   itemsKey: 'currentPet'
 }]
 
-},{}],12:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 'use strict'
 
 var S3 = 'https://s3.amazonaws.com/habitica-assets/mobileApp/images/'
@@ -571,7 +327,7 @@ module.exports = function (value) {
   return S3 + value + '.' + ext
 }
 
-},{}],13:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict'
 
 var VISUAL_BUFFS = {
@@ -601,7 +357,7 @@ module.exports = function findVisualBuff (user) {
   return buff
 }
 
-},{}],14:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict'
 
 module.exports = function (name, config) {
@@ -642,7 +398,7 @@ module.exports = function (name, config) {
   return String(s3Key)
 }
 
-},{}],15:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict'
 
 var EQUIPMENT_WITH_CUSTOM_STYLES = {
@@ -664,7 +420,7 @@ module.exports = function (equipment, img) {
   return equipment
 }
 
-},{}],16:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function (global){
 'use strict'
 
@@ -673,7 +429,7 @@ module.exports = function () {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],17:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -838,7 +594,7 @@ Emitter.prototype.hasListeners = function(event){
   return !! this.listeners(event).length;
 };
 
-},{}],18:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 (function (global){
 'use strict'
 
@@ -1153,7 +909,7 @@ Habitica.UnknownConnectionError = errors.UnknownConnectionError
 module.exports = Habitica
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./lib/connection":19,"./lib/errors":20}],19:[function(require,module,exports){
+},{"./lib/connection":12,"./lib/errors":13}],12:[function(require,module,exports){
 'use strict'
 
 var superagent = require('superagent')
@@ -1301,7 +1057,7 @@ Connection.prototype._router = function (method, route, options) {
 
 module.exports = Connection
 
-},{"./errors":20,"superagent":21}],20:[function(require,module,exports){
+},{"./errors":13,"superagent":14}],13:[function(require,module,exports){
 'use strict'
 
 function CustomError (message) {
@@ -1393,7 +1149,7 @@ module.exports = {
   UnknownConnectionError: UnknownConnectionError
 }
 
-},{}],21:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /**
  * Root reference for iframes.
  */
@@ -2371,7 +2127,7 @@ request.put = function(url, data, fn){
   return req;
 };
 
-},{"./is-object":22,"./request":24,"./request-base":23,"emitter":17}],22:[function(require,module,exports){
+},{"./is-object":15,"./request":17,"./request-base":16,"emitter":10}],15:[function(require,module,exports){
 /**
  * Check if `obj` is an object.
  *
@@ -2386,7 +2142,7 @@ function isObject(obj) {
 
 module.exports = isObject;
 
-},{}],23:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 /**
  * Module of mixed-in functions shared between node and client code
  */
@@ -2760,7 +2516,7 @@ exports.send = function(data){
   return this;
 };
 
-},{"./is-object":22}],24:[function(require,module,exports){
+},{"./is-object":15}],17:[function(require,module,exports){
 // The node and browser modules expose versions of this with the
 // appropriate constructor function bound as first argument
 /**
@@ -2794,4 +2550,4 @@ function request(RequestConstructor, method, url) {
 
 module.exports = request;
 
-},{}]},{},[4]);
+},{}]},{},[1]);
