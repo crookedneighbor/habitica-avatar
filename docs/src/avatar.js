@@ -7,7 +7,7 @@ function populateAvatar () {
   var id = hash.substring(1, hash.length)
 
   if (!id) {
-    return;
+    return
   }
 
   habiticaAvatar.fromUserId(id, {

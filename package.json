@@ -44,7 +44,7 @@
     ],
     "ignore": [
       "dist/",
-      "docs/script.js"
+      "docs/*.js"
     ]
   }
 }
