@@ -14,7 +14,7 @@ function habiticaAvatar (options) {
   var container = options.container
   var ignore = options.ignore || {}
   var appearance = user.preferences
-  var useClassMode = Boolean(isHabitica() || options.forceClassMode)
+  var useClassMode = !options.forceImageMode && Boolean(isHabitica() || options.forceClassMode)
 
   var avatarContainer = document.createElement('div')
   var characterSprites = document.createElement('div')
