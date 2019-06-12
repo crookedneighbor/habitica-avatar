@@ -64,7 +64,7 @@ function habiticaAvatar (options) {
 
 habiticaAvatar.fromUserId = function (userId, options) {
   return api.get('/members/' + userId).then(function (response) {
-    var config = Object.assign({}, options, {user: response.data})
+    var config = Object.assign({}, options, { user: response.data })
 
     return habiticaAvatar(config)
   })

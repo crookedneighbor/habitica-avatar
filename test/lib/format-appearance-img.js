@@ -27,7 +27,7 @@ describe('formatAppearance', function () {
 
   it('does not change skin if ignore sleep is used', function () {
     var name = formatAppearance('skin', {
-      ignore: {sleep: true},
+      ignore: { sleep: true },
       appearance: {
         sleep: true,
         skin: 'bar'

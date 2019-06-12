@@ -12,24 +12,33 @@
     "build:demo": "browserify docs/src/index.js > docs/script.js && browserify docs/src/avatar.js > docs/avatar-script.js",
     "lint": "standard --verbose | snazzy",
     "server": "http-server -p3003 docs",
+    "start": "npm run server",
     "pretest": "npm run lint",
     "test": "mocha test --recursive"
   },
   "keywords": [],
-  "author": "",
+  "author": "Blade Barringer <blade@crookedneighbor.com>",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/crookedneighbor/habitica-avatar.git"
+  },
+  "bugs": {
+    "url": "https://github.com/crookedneighbor/habitica-avatar/issues"
+  },
+  "homepage": "https://github.com/crookedneighbor/habitica-avatar#readme",
   "dependencies": {
     "habitica": "^4.0.0"
   },
   "devDependencies": {
-    "browserify": "^14.4.0",
-    "chai": "^4.1.2",
-    "http-server": "^0.10.0",
-    "mocha": "^4.0.0",
-    "sinon": "^4.0.1",
-    "sinon-chai": "^2.14.0",
-    "snazzy": "^7.0.0",
-    "standard": "^10.0.3"
+    "browserify": "^16.2.3",
+    "chai": "^4.2.0",
+    "http-server": "^0.11.1",
+    "mocha": "^6.1.4",
+    "sinon": "^7.3.2",
+    "sinon-chai": "^3.3.0",
+    "snazzy": "^8.0.0",
+    "standard": "^12.0.1"
   },
   "standard": {
     "globals": [
